@@ -1,0 +1,8 @@
+version: v2
+modules:
+  - path: idls/proto
+lint:
+  use:
+    - STANDARD
+  enum_zero_value_suffix: _INVALID
+  service_suffix: API
