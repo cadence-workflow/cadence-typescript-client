@@ -4,6 +4,12 @@ coverage/
 .vitest/
 .DS_Store
 
+# Local AI assistant settings
+.claude/settings.local.json
+.claude/*.local.json
+.cursor/settings.json
+.cursor/mcp.json
+
 # Local IDL tooling cache when using cadence-idl directly.
 idls/.bin/
 idls/venv/
