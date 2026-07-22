@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.vitest/
+.DS_Store
+
+# Local IDL tooling cache when using cadence-idl directly.
+idls/.bin/
+idls/venv/
