@@ -1,6 +1,6 @@
 {
   "name": "@cadence/cadence-typescript-client",
-  "version": "0.1.0-exp",
+  "version": "0.1.0",
   "description": "TypeScript client and worker SDK for Cadence",
   "type": "module",
   "main": "./dist/index.js",
