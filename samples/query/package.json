@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "../node_modules/.bin/tsx worker.ts"
+  }
+}
