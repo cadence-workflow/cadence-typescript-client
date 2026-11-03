@@ -1,65 +1,171 @@
 {
-  "name": "cadence-typescript-client",
+  "name": "@cadence/cadence-typescript-client",
   "version": "0.1.0",
-  "description": "TypeScript SDK foundation for Cadence clients, generated from cadence-idl.",
+  "description": "TypeScript client and worker SDK for Cadence",
   "type": "module",
-  "sideEffects": false,
-  "license": "Apache-2.0",
-  "packageManager": "npm@10.9.3",
-  "engines": {
-    "node": ">=22.0.0",
-    "npm": ">=10.9.3"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "NOTICE"
-  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "import": "./dist/client.js"
+    "./internal": null,
+    "./internal/*": null,
+    "./activity/activity": {
+      "types": "./dist/activity/activity.d.ts",
+      "import": "./dist/activity/activity.js"
     },
-    "./api/v1": {
-      "types": "./dist/api/v1.d.ts",
-      "import": "./dist/api/v1.js"
+    "./cadence": {
+      "types": "./dist/cadence.d.ts",
+      "import": "./dist/cadence.js"
     },
-    "./admin/v1": {
-      "types": "./dist/admin/v1.d.ts",
-      "import": "./dist/admin/v1.js"
+    "./client/client": {
+      "types": "./dist/client/client.d.ts",
+      "import": "./dist/client/client.js"
     },
-    "./gen/*": {
-      "types": "./dist/gen/*.d.ts",
-      "import": "./dist/gen/*"
+    "./compatibility/thrift2proto": {
+      "types": "./dist/compatibility/thrift2proto.d.ts",
+      "import": "./dist/compatibility/thrift2proto.js"
+    },
+    "./debug/types": {
+      "types": "./dist/debug/types.d.ts",
+      "import": "./dist/debug/types.js"
+    },
+    "./encoded/encoded": {
+      "types": "./dist/encoded/encoded.d.ts",
+      "import": "./dist/encoded/encoded.js"
+    },
+    "./error": {
+      "types": "./dist/error.d.ts",
+      "import": "./dist/error.js"
+    },
+    "./errors/idl_errors": {
+      "types": "./dist/errors/idl_errors.d.ts",
+      "import": "./dist/errors/idl_errors.js"
+    },
+    "./grpc_rpc": {
+      "types": "./dist/grpc_rpc.d.ts",
+      "import": "./dist/grpc_rpc.js"
+    },
+    "./interceptors/workflow_interceptor": {
+      "types": "./dist/interceptors/workflow_interceptor.d.ts",
+      "import": "./dist/interceptors/workflow_interceptor.js"
+    },
+    "./isolationgroup/wrapper": {
+      "types": "./dist/isolationgroup/wrapper.d.ts",
+      "import": "./dist/isolationgroup/wrapper.js"
+    },
+    "./thrift_yarpc_transport": {
+      "types": "./dist/thrift_yarpc_transport.d.ts",
+      "import": "./dist/thrift_yarpc_transport.js"
+    },
+    "./version": {
+      "types": "./dist/version.d.ts",
+      "import": "./dist/version.js"
+    },
+    "./worker/worker": {
+      "types": "./dist/worker/worker.d.ts",
+      "import": "./dist/worker/worker.js"
+    },
+    "./workflow/activity_options": {
+      "types": "./dist/workflow/activity_options.d.ts",
+      "import": "./dist/workflow/activity_options.js"
+    },
+    "./workflow/batch": {
+      "types": "./dist/workflow/batch.d.ts",
+      "import": "./dist/workflow/batch.js"
+    },
+    "./workflow/context": {
+      "types": "./dist/workflow/context.d.ts",
+      "import": "./dist/workflow/context.js"
+    },
+    "./workflow/context_propagator": {
+      "types": "./dist/workflow/context_propagator.d.ts",
+      "import": "./dist/workflow/context_propagator.js"
+    },
+    "./workflow/deterministic_wrappers": {
+      "types": "./dist/workflow/deterministic_wrappers.d.ts",
+      "import": "./dist/workflow/deterministic_wrappers.js"
+    },
+    "./workflow/error": {
+      "types": "./dist/workflow/error.d.ts",
+      "import": "./dist/workflow/error.js"
+    },
+    "./workflow/session": {
+      "types": "./dist/workflow/session.d.ts",
+      "import": "./dist/workflow/session.js"
+    },
+    "./workflow/workflow": {
+      "types": "./dist/workflow/workflow.d.ts",
+      "import": "./dist/workflow/workflow.js"
+    },
+    "./workflow/workflow_options": {
+      "types": "./dist/workflow/workflow_options.d.ts",
+      "import": "./dist/workflow/workflow_options.js"
+    },
+    "./workflow_service_client": {
+      "types": "./dist/workflow_service_client.d.ts",
+      "import": "./dist/workflow_service_client.js"
+    },
+    "./workflow_service_procedures": {
+      "types": "./dist/workflow_service_procedures.d.ts",
+      "import": "./dist/workflow_service_procedures.js"
+    },
+    "./x/blocks/blocks": {
+      "types": "./dist/x/blocks/blocks.d.ts",
+      "import": "./dist/x/blocks/blocks.js"
+    },
+    "./x/resettabletimer/resettable_timer": {
+      "types": "./dist/x/resettabletimer/resettable_timer.d.ts",
+      "import": "./dist/x/resettabletimer/resettable_timer.js"
+    },
+    "./generated/*": {
+      "types": "./dist/generated/*.d.ts",
+      "import": "./dist/generated/*.js"
     },
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "prepare:idl": "node scripts/prepare-idl.mjs",
-    "generate": "npm run prepare:idl && buf generate --template buf.gen.yaml idls/proto",
-    "lint:proto": "buf lint",
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "clean": "node scripts/clean.mjs",
-    "pr": "npm run generate && npm run lint:proto && npm run typecheck && npm run build && npm run test",
-    "prepack": "npm run generate && npm run build"
+  "files": [
+    "dist",
+    "README.md",
+    "COVERAGE.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cadence-workflow/cadence-typescript-client.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.12.1",
-    "@connectrpc/connect": "^2.1.2",
-    "@connectrpc/connect-node": "^2.1.2"
+    "@bufbuild/protobuf": "^2.0.0",
+    "@creditkarma/thrift-server-core": "0.16.1",
+    "@grpc/grpc-js": "^1.10.0",
+    "@opentelemetry/api": "*",
+    "@sinonjs/fake-timers": "*",
+    "async-mutex": "*",
+    "cron-parser": "^5.10.3",
+    "jsonwebtoken": "*",
+    "limiter": "*",
+    "prom-client": "*",
+    "uuid": "latest",
+    "winston": "*"
   },
   "devDependencies": {
-    "@bufbuild/buf": "^1.71.0",
-    "@bufbuild/protoc-gen-es": "^2.12.1",
-    "@types/node": "^26.0.1",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "@types/jsonwebtoken": "*",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.4"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepack": "npm run build",
+    "test:integration": "vitest run --maxWorkers=4 tests/integration",
+    "typecheck:integration": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --strict --skipLibCheck tests/integration/*.ts",
+    "typecheck": "tsc --noEmit"
   }
 }

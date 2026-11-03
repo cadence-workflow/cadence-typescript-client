@@ -1,0 +1,16 @@
+{
+  "name": "cadence-typescript-samples",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "hello_world": "tsx hello_world/worker.ts",
+    "signal": "tsx signal/worker.ts",
+    "query": "tsx query/worker.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}
