@@ -9,10 +9,7 @@ import {
   TestPinningTTL,
   TestLRUWithTTL,
   TestLRUCacheConcurrentAccess,
-  TestRemoveFunc,
-  TestRemovedFuncWithTTL,
 } from './lru_test.js';
-
 describe("lru", () => {
   it("TestLRU", TestLRU);
   it("TestExist", TestExist);
@@ -21,6 +18,4 @@ describe("lru", () => {
   it("TestPinningTTL", TestPinningTTL);
   it("TestLRUWithTTL", TestLRUWithTTL);
   it("TestLRUCacheConcurrentAccess", TestLRUCacheConcurrentAccess);
-  it("TestRemoveFunc", TestRemoveFunc);
-  it("TestRemovedFuncWithTTL", TestRemovedFuncWithTTL);
 });

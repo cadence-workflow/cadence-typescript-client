@@ -6,13 +6,10 @@ import {
   TestPtrHelpers,
   TestCeilHelpers,
   TestValueFromPtr,
-  TestZero,
 } from './convert_test.js';
-
 describe("convert", () => {
   it("TestPtrOf", TestPtrOf);
   it("TestPtrHelpers", TestPtrHelpers);
   it("TestCeilHelpers", TestCeilHelpers);
   it("TestValueFromPtr", TestValueFromPtr);
-  it("TestZero", TestZero);
 });

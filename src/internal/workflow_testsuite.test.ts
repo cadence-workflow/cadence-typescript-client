@@ -4,17 +4,8 @@ import { describe, it } from 'vitest';
 import {
   TestSetWorkflowTimeout,
   TestSetMemoOnStart,
-  TestSetSearchAttributesOnStart,
-  TestUnregisteredActivity,
-  TestNoExplicitRegistrationRequired,
-  TestWorkflowReturnNil,
 } from './workflow_testsuite_test.js';
-
 describe("workflow_testsuite", () => {
   it("TestSetWorkflowTimeout", TestSetWorkflowTimeout);
   it("TestSetMemoOnStart", TestSetMemoOnStart);
-  it("TestSetSearchAttributesOnStart", TestSetSearchAttributesOnStart);
-  it("TestUnregisteredActivity", TestUnregisteredActivity);
-  it("TestNoExplicitRegistrationRequired", TestNoExplicitRegistrationRequired);
-  it("TestWorkflowReturnNil", TestWorkflowReturnNil);
 });

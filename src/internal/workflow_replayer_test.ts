@@ -593,7 +593,7 @@ export function getTestReplayWorkflowPartialHistoryNoDecisionEvents(): shared_IH
                 }),
                 taskList: testTaskList,
                 input: testEncodeFunctionArgs(getDefaultDataConverter()),
-            }),
+            })),
             createTestEventDecisionTaskScheduled(2, new shared_DecisionTaskScheduledEventAttributes({})),
             createTestEventDecisionTaskStarted(3),
             createTestEventDecisionTaskFailed(4, new shared_DecisionTaskFailedEventAttributes({

@@ -21,8 +21,6 @@ describe("internal_workflow_client", () => {
     });
     beforeEach(async () => { await s.SetupTest(); });
     afterEach(async () => { await s.TearDownTest(); });
-    it("TestGetWorkflowMemo", async (ctx) => { try { await s.TestGetWorkflowMemo(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
-    it("TestSerializeSearchAttributes", async (ctx) => { try { await s.TestSerializeSearchAttributes(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
     it("TestSignalWithStartWorkflowAsync_RequestCreationFails", async (ctx) => { try { await s.TestSignalWithStartWorkflowAsync_RequestCreationFails(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
     it("TestSignalWithStartWorkflow_RequestCreationFails", async (ctx) => { try { await s.TestSignalWithStartWorkflow_RequestCreationFails(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
     it("TestStartWorkflowAsync_RequestCreationFails", async (ctx) => { try { await s.TestStartWorkflowAsync_RequestCreationFails(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });

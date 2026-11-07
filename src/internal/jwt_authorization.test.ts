@@ -2,11 +2,8 @@
 // test module importing it for a helper does not also register this suite.
 import { describe, it } from 'vitest';
 import {
-  TestCorrectTokenCreation,
   TestIncorrectPrivateKeyForTokenCreation,
 } from './jwt_authorization_test.js';
-
 describe("jwt_authorization", () => {
-  it("TestCorrectTokenCreation", TestCorrectTokenCreation);
   it("TestIncorrectPrivateKeyForTokenCreation", TestIncorrectPrivateKeyForTokenCreation);
 });

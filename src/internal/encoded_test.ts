@@ -70,7 +70,7 @@ export class testDataConverter implements internal_DataConverter {
 }
 
 export function testDataConverterFunction(dc: internal_DataConverter, f: unknown, ...args: unknown[]): string {
-    const input = dc.ToData(args...);
+    const input = dc.ToData(...args);
     const result: Array<{ value: unknown }> = [];
 
     for (const v of args) {

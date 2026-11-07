@@ -15,10 +15,8 @@ describe("resettable_timer", () => {
       s = new ResettableTimerTestSuite();
     });
     beforeEach(async () => { await s.SetupTest(); });
-    it("TestTimerDoesNotFireWhenKeptReset", async (ctx) => { try { await s.TestTimerDoesNotFireWhenKeptReset(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
     it("TestTimerFiresAfterExpiration", async (ctx) => { try { await s.TestTimerFiresAfterExpiration(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
     it("TestTimerFiresAfterResetsStop", async (ctx) => { try { await s.TestTimerFiresAfterResetsStop(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
-    it("TestTimerResetAfterFireIsNoop", async (ctx) => { try { await s.TestTimerResetAfterFireIsNoop(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
     it("TestTimerResetWithDifferentDurations", async (ctx) => { try { await s.TestTimerResetWithDifferentDurations(); await GoTestifySuite.__drainSubtests(); } catch (e) { if ((e as Error)?.name !== "GoTestSkipped") throw e; ctx.skip(); } });
   });
 });

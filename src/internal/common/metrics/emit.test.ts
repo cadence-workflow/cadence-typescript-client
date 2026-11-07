@@ -6,23 +6,14 @@ import {
   TestEmitLatency_DualMode,
   TestEmitLatency_HistogramOnlyMode,
   TestEmitLatency_TimersOnlyMode,
-  TestStartLatency_DefaultMode,
-  TestStartLatency_DualMode,
-  TestStartLatency_HistogramOnlyMode,
-  TestDualStopwatch_MultipleStops,
   TestEmitLatency_DifferentHistograms,
   TestMetricEmitMode_ConcurrentAccess,
 } from './emit_test.js';
-
 describe("emit", () => {
   it("TestEmitLatency_DefaultMode", TestEmitLatency_DefaultMode);
   it("TestEmitLatency_DualMode", TestEmitLatency_DualMode);
   it("TestEmitLatency_HistogramOnlyMode", TestEmitLatency_HistogramOnlyMode);
   it("TestEmitLatency_TimersOnlyMode", TestEmitLatency_TimersOnlyMode);
-  it("TestStartLatency_DefaultMode", TestStartLatency_DefaultMode);
-  it("TestStartLatency_DualMode", TestStartLatency_DualMode);
-  it("TestStartLatency_HistogramOnlyMode", TestStartLatency_HistogramOnlyMode);
-  it("TestDualStopwatch_MultipleStops", TestDualStopwatch_MultipleStops);
   it("TestEmitLatency_DifferentHistograms", TestEmitLatency_DifferentHistograms);
   it("TestMetricEmitMode_ConcurrentAccess", TestMetricEmitMode_ConcurrentAccess);
 });

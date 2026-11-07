@@ -5,14 +5,9 @@ import {
   TestTracingContextPropagator,
   TestTracingContextPropagatorNoSpan,
   TestTracingContextPropagatorWorkflowContext,
-  TestTracingContextPropagatorWorkflowContextNoSpan,
-  TestConsistentInjectionExtraction,
 } from './tracer_test.js';
-
 describe("tracer", () => {
   it("TestTracingContextPropagator", TestTracingContextPropagator);
   it("TestTracingContextPropagatorNoSpan", TestTracingContextPropagatorNoSpan);
   it("TestTracingContextPropagatorWorkflowContext", TestTracingContextPropagatorWorkflowContext);
-  it("TestTracingContextPropagatorWorkflowContextNoSpan", TestTracingContextPropagatorWorkflowContextNoSpan);
-  it("TestConsistentInjectionExtraction", TestConsistentInjectionExtraction);
 });

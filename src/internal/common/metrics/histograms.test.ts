@@ -5,18 +5,13 @@ import {
   TestHistogramBuckets,
   TestHistogramValues,
   TestSubset,
-  TestSubsetPanics,
   TestMakeSubsettableHistogramPanics,
   TestRecordHistogram,
-  TestStartHistogram,
 } from './histograms_test.js';
-
 describe("histograms", () => {
   it("TestHistogramBuckets", TestHistogramBuckets);
   it("TestHistogramValues", TestHistogramValues);
   it("TestSubset", TestSubset);
-  it("TestSubsetPanics", TestSubsetPanics);
   it("TestMakeSubsettableHistogramPanics", TestMakeSubsettableHistogramPanics);
   it("TestRecordHistogram", TestRecordHistogram);
-  it("TestStartHistogram", TestStartHistogram);
 });

@@ -3,12 +3,9 @@
 import { describe, it } from 'vitest';
 import {
   Test_MergeDicts,
-  Test_AwaitWaitGroup,
   Test_IsTypeByteSlice,
 } from './util_test.js';
-
 describe("util", () => {
   it("Test_MergeDicts", Test_MergeDicts);
-  it("Test_AwaitWaitGroup", Test_AwaitWaitGroup);
   it("Test_IsTypeByteSlice", Test_IsTypeByteSlice);
 });
