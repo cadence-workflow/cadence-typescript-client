@@ -1,9 +1,0 @@
-// Suite module for batch_future_test.ts. Registration is kept out of the declaration module so that a sibling
-// test module importing it for a helper does not also register this suite.
-import { describe, it } from 'vitest';
-import {
-  Test_BatchWorkflow_Cancel,
-} from './batch_future_test.js';
-describe("batch_future", () => {
-  it.skip("Test_BatchWorkflow_Cancel", Test_BatchWorkflow_Cancel);
-});

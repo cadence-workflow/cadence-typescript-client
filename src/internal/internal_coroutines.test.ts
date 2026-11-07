@@ -17,7 +17,6 @@ import {
   TestSendClosedChannel,
   TestBlockedSendClosedChannel,
   TestAsyncSendClosedChannel,
-  TestDispatchClose,
   TestPanic,
   TestAwait,
   TestAwaitCancellation,
@@ -44,7 +43,6 @@ describe("internal_coroutines", () => {
   it("TestSendClosedChannel", TestSendClosedChannel);
   it("TestBlockedSendClosedChannel", TestBlockedSendClosedChannel);
   it("TestAsyncSendClosedChannel", TestAsyncSendClosedChannel);
-  it.skip("TestDispatchClose", TestDispatchClose);
   it("TestPanic", TestPanic);
   it("TestAwait", TestAwait);
   it("TestAwaitCancellation", TestAwaitCancellation);
