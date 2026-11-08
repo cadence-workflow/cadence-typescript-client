@@ -164,7 +164,9 @@
   "scripts": {
     "build": "tsc",
     "prepack": "npm run build",
-    "test:integration": "vitest run --maxWorkers=4 tests/integration",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "typecheck:integration": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --strict --skipLibCheck tests/integration/*.ts",
     "typecheck": "tsc --noEmit"
   }
