@@ -1,7 +1,8 @@
 {
-  "name": "@cadence/cadence-typescript-client",
+  "name": "cadence-typescript-client",
   "version": "0.1.0",
   "description": "TypeScript client and worker SDK for Cadence",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -129,7 +130,7 @@
   "files": [
     "dist",
     "README.md",
-    "COVERAGE.md"
+    "LICENSE"
   ],
   "engines": {
     "node": ">=18"
@@ -162,7 +163,8 @@
     "vitest": "^3.2.4"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc",
     "prepack": "npm run build",
     "test": "npm run test:unit",
     "test:unit": "vitest run --config vitest.config.ts",
