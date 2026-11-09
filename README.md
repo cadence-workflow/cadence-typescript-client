@@ -1,116 +1,160 @@
-# cadence-typescript-client — v4-luna
+# TypeScript framework for Cadence
 
-A TypeScript port of the [Uber Cadence Go client](https://github.com/uber-go/cadence-client),
-produced by the [condorance](https://github.com/condorance/condorance) Go→TypeScript
-generator with `gpt-5.6-luna` filling function bodies over a deterministic skeleton.
+[![Unit tests](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/unit.yml/badge.svg)](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/unit.yml)
+[![Integration tests](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/integration.yml/badge.svg)](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/integration.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
-**The generated worker engine runs workflows end-to-end against a real Cadence server
-with zero manual patches to generated code.** The server hands the engine a decision
-task; the engine decodes the history, replays it, drives the workflow function through
-its coroutine dispatcher, consumes signals, runs activities, decodes arguments,
-serializes results, and the server records `WorkflowExecutionCompleted`. The drop ships
-with a 50-file integration test suite verified against a live server — coverage exceeds the
-upstream go-client integration suite for several APIs (async activity completion,
-MutableSideEffect, SignalExternalWorkflow are e2e-tested here but unit-test-only
-upstream). See [COVERAGE.md](COVERAGE.md) for the case-by-case matrix against the 42
-upstream integration cases, the canary suite, and the cadence-samples recipes.
+[Cadence](https://github.com/cadence-workflow/cadence) is a distributed, scalable,
+durable, and highly available orchestration engine for asynchronous, long-running
+business logic.
 
-## What is generated, what is hand-written
+`@cadence-typescript-client` is the official TypeScript framework for
+authoring workflows and activities and running Cadence workers.
 
-Everything that contains translated Go logic is generated. The hand-written surface is the
-host wiring any SDK needs — an entry point has to exist somewhere — and nothing else:
+> [!NOTE]
+> This project is in early development. Its API closely follows the
+> [Cadence Go client](https://github.com/cadence-workflow/cadence-go-client), from
+> which most of the implementation is generated.
 
-| Layer | Files | Status |
-|---|---|---|
-| Engine: pollers, task handlers, coroutine dispatcher, decision state machine, history replay, signal channels, arg/result serialization | `src/internal/**`, `src/worker/**`, `src/workflow/**`, `src/client/**`, … | **Generated** (LLM body fill over a deterministic skeleton) |
-| IDL types and codecs | `src/generated/**` (ts-proto / thrift artifacts), `src/compatibility/**` | **Generated** |
-| Runtime shims (`Ref`, channels, clock, context, sync, …) | `src/internal/runtime/*` | **Generated deterministically** — emitted by the generator from its own templates on every run; no LLM output, no per-run edits |
-| Service-client binding | `src/workflow_service_client.ts` | **Hand-written** — a Proxy that binds the *generated* `WorkflowServiceClientLike` interface to the wire through the *generated* per-method codec table; contains no translated logic |
-| Network socket | the socket halves of `src/grpc_rpc.ts` and `src/thrift_yarpc_transport.ts` | **Hand-written** — payload construction and dispatch around them are generated |
-| Integration tests | `tests/integration/*.test.ts` (50 files) | **Hand-written** test harness (registers workflows, starts workers, and drives the server through the SDK client) |
+## Requirements
 
-Rule of thumb: if a file translates a Go function, it is generated and is never edited by
-hand — fixes go into the generator and the file is regenerated.
+- Node.js 18 or later
+- A running Cadence server with its gRPC frontend available
+- The [Cadence CLI](https://cadenceworkflow.io/docs/cli/) to run the examples below
 
-## The proven end-to-end path
+## Installation
 
-The integration tests exercise this chain against a live server; all of it is generated except
-the socket:
-
-```
-worker.New → internal.NewWorker
-  → decision-task poller           PollForDecisionTask (long-poll loop)
-  → workflow task handler          decodes the history event stream
-  → history replay                 re-executes the workflow deterministically per decision task
-  → coroutine dispatcher           suspends and resumes workflow coroutines
-  → argument decode                start input → the workflow function's parameters
-  → the workflow function          GetSignalChannel(ctx).Receive(ctx, box) blocks on an empty channel
-  → signal delivery                each signal arrives on its own decision task and wakes the coroutine
-  → decision generation            CompleteWorkflowExecution once the function returns
-  → RespondDecisionTaskCompleted   accepted by the server
-  → result serialization           the return value lands in the WorkflowExecutionCompleted event
+```sh
+npm install @cadence/cadence-typescript-client
 ```
 
-## How to test
+## Usage
 
-1. Start a Cadence server with its gRPC frontend available at `127.0.0.1:7833`.
-   The suite uses the built-in `default` domain; set `CADENCE_DOMAIN` to override it.
-   The suite does not depend on Docker or a particular container name.
+A workflow is deterministic application logic. Activities perform work that may
+have side effects:
 
-2. Install and run the integration tests:
+```ts
+import type { workflow_Context } from '@cadence/cadence-typescript-client/workflow/context';
+import { WithActivityOptions } from '@cadence/cadence-typescript-client/workflow/activity_options';
+import { ExecuteActivity } from '@cadence/cadence-typescript-client/workflow/workflow';
 
-   ```sh
-   npm install
-   npm run typecheck:integration
-   npm run test:integration
-   ```
+const ONE_MINUTE_NS = 60 * 1_000_000_000;
 
-   The tests start the generated worker in-process and use the SDK client for workflow
-   starts, signals, queries, cancellation, termination, descriptions, and history reads.
+interface HelloInput {
+  message: string;
+}
 
-3. A run is green only when the expected terminal event is present in server history.
-   The shared client harness reads structured history directly from Cadence, and each
-   test asserts the relevant close status and events.
+export async function helloWorldWorkflow(
+  ctx: workflow_Context,
+  input: HelloInput,
+): Promise<string> {
+  const activityCtx = WithActivityOptions(ctx, {
+    TaskList: '',
+    ScheduleToCloseTimeout: 0,
+    ScheduleToStartTimeout: ONE_MINUTE_NS,
+    StartToCloseTimeout: ONE_MINUTE_NS,
+    HeartbeatTimeout: 0,
+    WaitForCancellation: false,
+    ActivityID: '',
+  });
 
-   `SMOKE_TRACE=1` wraps the transport in a logging proxy (every RPC and every swallowed
-   throw becomes visible) and surfaces unhandled rejections.
+  const result = { value: '' };
+  const future = await ExecuteActivity(activityCtx, helloWorldActivity, input);
+  await future.Get(activityCtx, result);
+  return result.value;
+}
 
-## Feature status
+export async function helloWorldActivity(
+  _ctx: unknown,
+  input: HelloInput,
+): Promise<string> {
+  return `Hello, ${input.message}!`;
+}
+```
 
-Measured against the live server, not inferred. "Verified" means the server recorded the
-expected history for that shape.
+Register the workflow and activity with a worker, then start the worker. The
+[Hello World sample](samples/hello_world/) contains a complete worker and can be
+run directly from this repository:
 
-| Workflow feature | Status |
-|---|---|
-| Worker registration, decision-task poll loop | ✅ verified |
-| Workflow start → function executes | ✅ verified |
-| Suspend on an empty signal channel, resume per signal (3 signals, each on its own decision task; sticky and full-replay delivery) | ✅ verified |
-| Signal payload decode | ✅ verified (byte-exact) |
-| Start-argument delivery into the workflow function | ✅ verified (string arg, byte-exact) |
-| Return-value delivery into the completion event | ✅ verified (with and without arguments) |
-| Server-side `WorkflowExecutionCompleted` | ✅ verified (all three workflow shapes) |
-| Timers (`Sleep`) | ✅ verified |
-| Activities: execute, failure propagation, RetryPolicy, heartbeat (manual + auto), timeout-driven retry, `GetActivityInfo` | ✅ verified |
-| Local activities: execute, retry, info, context propagation | ✅ verified |
-| Child workflows: execute, cancel, memo, parent-close policies, retry, timeout | ✅ verified |
-| Queries: `SetQueryHandler`, consistent query, `__stack_trace`, oversized-result error | ✅ verified |
-| Cancel, terminate + describe, workflow-ID reuse policies | ✅ verified |
-| `ContinueAsNew` (incl. header/memo carryover), cron + `GetLastCompletionResult` | ✅ verified |
-| `SideEffect`, `MutableSideEffect`, `GetVersion` (V1-V6 migration ladder, 6×6 replay matrix) | ✅ verified |
-| `SignalExternalWorkflow`, `SignalWithStartWorkflow` | ✅ verified |
-| Async activity completion (`ErrResultPending` → `CompleteActivity` / `CompleteActivityByID`) | ✅ verified |
-| `UpsertSearchAttributes`, basic visibility listing | ✅ verified |
-| Sessions (`CreateSession` / `CompleteSession`, resource-specific task list) | ✅ verified |
-| Domain client: register, update, describe, failover (single-node global domain) | ✅ verified |
-| `WorkflowReplayer`; nondeterminism detection (fail-policy + query paths); replay-varying retry options | ✅ verified |
-| Multi-argument and struct-typed workflow arguments | ✅ verified (shapes + parallel tests) |
-| opentracing span-context serialization (`TestOverrideSpanContext`) | ✗ not implemented — `internal/tracer.ts` is stubbed. Generic context-value propagation (`ContextPropagator`) IS verified; only the Jaeger-style traceID/spanID/baggage header lane is missing |
-| Search-attribute *queries* (`ListWorkflow` with a query string, `CountWorkflow`) | ⏳ untested — requires an Elasticsearch-backed server; the upsert/write side is verified |
-| `internal_workflow_testsuite` (the mock environment for unit-testing user workflows) | ✗ not usable — 42 tsc errors remain in that one file; excluded from the compile gate; does not affect the production worker/client paths |
+```sh
+npm install
+npm --prefix samples install
+cadence --env development --domain cadence-samples domain register
+npm --prefix samples run hello_world
+```
 
-## Regenerating
+With the worker running, start a workflow from another terminal:
 
-This tree is an output artifact. The generator, its prompts, and the integration-test sources
-live in the condorance repository; regeneration runs the closure pipeline against the Go
-client source and replaces `src/**` wholesale. Do not hand-edit generated files — a
-regeneration overwrites them.
+```sh
+cadence --env development --domain cadence-samples \
+  workflow start \
+  --workflow_type cadence_samples.HelloWorldWorkflow \
+  --tl cadence-samples-worker \
+  --et 60 \
+  --input '{"message":"Cadence"}'
+```
+
+See the [sample instructions](samples/hello_world/README.md) for server setup and
+ways to inspect the result.
+
+## Samples
+
+- [Hello World](samples/hello_world/) — run a workflow that calls an activity
+- [Signals](samples/signal/) — send data to a running workflow
+- [Queries](samples/query/) — expose workflow state through a query handler
+
+## Project status
+
+The client and worker are tested end to end against a real Cadence server. The
+[integration suite](tests/integration/) covers workflows, activities, signals,
+queries, timers, child workflows, retries, cancellation, cron, sessions,
+versioning, replay, visibility, and domain operations.
+
+Known gaps:
+
+- OpenTracing span-context serialization is not implemented.
+- Search-attribute queries require an Elasticsearch-backed server and are not
+  covered by the integration suite.
+- The generated in-memory workflow test environment is not yet usable. This
+  does not affect production client or worker paths.
+- Unit Test generated have some type check errors
+
+## Development
+
+Install dependencies and run the local checks:
+
+```sh
+npm ci
+npm run test:unit
+```
+
+Integration tests expect Cadence at `127.0.0.1:7833` and use the `default`
+domain unless `CADENCE_ADDRESS` or `CADENCE_DOMAIN` is set:
+
+```sh
+docker compose -f tests/integration/docker-compose.yaml up --detach --wait
+npm run typecheck:integration
+npm run test:integration
+docker compose -f tests/integration/docker-compose.yaml down --volumes
+```
+
+Most files under `src/` are generated by
+[condorance](https://github.com/condorance/condorance). Do not edit files marked
+as generated; make translated-logic fixes in the generator and regenerate the
+client.
+
+## Documentation and community
+
+- [Cadence documentation](https://cadenceworkflow.io/docs/)
+- [TypeScript samples](samples/)
+- [Cadence Go client](https://github.com/cadence-workflow/cadence-go-client)
+- [Cadence Java client](https://github.com/cadence-workflow/cadence-java-client)
+- [CNCF Slack](https://communityinviter.com/apps/cloud-native/cncf) —
+  `#cadence-users`
+
+Issues and pull requests are welcome in this repository. For feature proposals
+and support questions, start a discussion in the `#cadence-users` Slack channel.
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).

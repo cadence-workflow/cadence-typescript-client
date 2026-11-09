@@ -13,7 +13,7 @@ permissions:
 jobs:
   publish:
     name: Publish package
-    if: github.repository == 'cadence-workflow/cadence-typeescript-sdk'
+    if: github.repository == 'cadence-workflow/cadence-typescript-client'
     runs-on: ubuntu-latest
 
     steps:
