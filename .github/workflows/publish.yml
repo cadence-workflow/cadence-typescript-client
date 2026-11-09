@@ -27,10 +27,17 @@ jobs:
           registry-url: https://registry.npmjs.org/
           package-manager-cache: false
 
-      - name: Verify tag matches package version
+      - name: Verify package metadata and tag
         shell: bash
         run: |
+          package_name="$(node --print "require('./package.json').name")"
           package_version="$(node --print "require('./package.json').version")"
+
+          if [[ "${package_name}" != "cadence-typescript-client" ]]; then
+            echo "::error::Expected package name cadence-typescript-client, found ${package_name}"
+            exit 1
+          fi
+
           if [[ "${GITHUB_REF_NAME}" != "${package_version}" && "${GITHUB_REF_NAME}" != "v${package_version}" ]]; then
             echo "::error::Tag ${GITHUB_REF_NAME} does not match package version ${package_version}"
             exit 1
@@ -46,4 +53,4 @@ jobs:
         run: npm run build
 
       - name: Publish package
-        run: npm publish --ignore-scripts --access public
+        run: npm publish --ignore-scripts --provenance --access public

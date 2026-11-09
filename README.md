@@ -2,14 +2,16 @@
 
 [![Unit tests](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/unit.yml/badge.svg)](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/unit.yml)
 [![Integration tests](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/integration.yml/badge.svg)](https://github.com/cadence-workflow/cadence-typescript-client/actions/workflows/integration.yml)
+[![npm](https://img.shields.io/npm/v/cadence-typescript-client.svg)](https://www.npmjs.com/package/cadence-typescript-client)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 [Cadence](https://github.com/cadence-workflow/cadence) is a distributed, scalable,
 durable, and highly available orchestration engine for asynchronous, long-running
 business logic.
 
-`@cadence-typescript-client` is the official TypeScript framework for
-authoring workflows and activities and running Cadence workers.
+[`cadence-typescript-client`](https://www.npmjs.com/package/cadence-typescript-client)
+is the official TypeScript framework for authoring workflows and activities and
+running Cadence workers.
 
 > [!NOTE]
 > This project is in early development. Its API closely follows the
@@ -25,7 +27,7 @@ authoring workflows and activities and running Cadence workers.
 ## Installation
 
 ```sh
-npm install @cadence/cadence-typescript-client
+npm install cadence-typescript-client
 ```
 
 ## Usage
@@ -34,9 +36,9 @@ A workflow is deterministic application logic. Activities perform work that may
 have side effects:
 
 ```ts
-import type { workflow_Context } from '@cadence/cadence-typescript-client/workflow/context';
-import { WithActivityOptions } from '@cadence/cadence-typescript-client/workflow/activity_options';
-import { ExecuteActivity } from '@cadence/cadence-typescript-client/workflow/workflow';
+import type { workflow_Context } from 'cadence-typescript-client/workflow/context';
+import { WithActivityOptions } from 'cadence-typescript-client/workflow/activity_options';
+import { ExecuteActivity } from 'cadence-typescript-client/workflow/workflow';
 
 const ONE_MINUTE_NS = 60 * 1_000_000_000;
 
